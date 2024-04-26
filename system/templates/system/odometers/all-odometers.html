@@ -1,0 +1,110 @@
+{% extends 'layouts/dashboard_base.html' %}
+
+{% block title %}
+    Odometers
+{% endblock %}
+
+
+{% block content %}
+    <div class="main-content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-12 box-margin">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-content-center mb-2">
+                                <h4 class="card-title mb-2">All Odometers</h4>
+                                <button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#add-odometer">
+                                    <i class="zmdi zmdi-plus"></i> Add Odometer
+                                </button>
+                            </div>
+
+                            <div id="datatable-buttons_wrapper" class="dataTables_wrapper dt-bootstrap4 no-footer">
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <table id="datatable-buttons"
+                                               class="table table-striped dt-responsive nowrap w-100 dataTable no-footer dtr-inline collapsed"
+                                               role="grid" aria-describedby="datatable-buttons_info"
+                                               style="width: 1197px;">
+                                            <thead>
+                                            <tr role="row">
+                                                <th class="sorting_asc" tabindex="0" aria-controls="datatable-buttons"
+                                                    rowspan="1" colspan="1"
+                                                    aria-sort="ascending"
+                                                    aria-label="Name: activate to sort column descending">Name
+                                                </th>
+                                                <th class="sorting" tabindex="0" aria-controls="datatable-buttons"
+                                                    rowspan="1" colspan="1"
+                                                    aria-label="Position: activate to sort column ascending">Value
+                                                </th>
+                                                <th class="sorting" tabindex="0" aria-controls="datatable-buttons"
+                                                    rowspan="1" colspan="1"
+                                                    aria-label="Office: activate to sort column ascending">Equipment
+                                                </th>
+                                            </tr>
+                                            </thead>
+
+
+                                            <tbody>
+                                            <tr role="row" class="odd">
+                                                <td tabindex="0" class="sorting_1">Airi Satou</td>
+                                                <td style="">Accountant</td>
+                                                <td style="">Tokyo</td>
+                                            </tr>
+
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div> <!-- end card body-->
+                    </div> <!-- end card -->
+                </div><!-- end col-->
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="add-odometer" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Add new Odometer</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form action="" method="POST">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label for="">Name</label>
+                            <input type="text" class="form-control" name="name" placeholder="Name of Odometer" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="">Value</label>
+                            <input type="number" step="0.0001" class="form-control" name="value" placeholder="Name of Odometer" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="">Equipment</label>
+                            <select class="form-control" name="equipment" id="">
+                                <option value="" selected>-- Select Equipment --</option>
+                            </select>
+                        </div>
+                        <div class="form-group text-center">
+                            <button type="submit" class="btn btn-success">Save Odometer</button>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{##}
+{#"name": "string",#}
+{#  "value": 0,#}
+{#  "equipment": 0#}

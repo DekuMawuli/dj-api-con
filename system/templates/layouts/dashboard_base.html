@@ -1,0 +1,97 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="description" content="">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- The above 4 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+
+    <!-- Title -->
+    <title>{% block title %}{% endblock %}</title>
+
+    <!-- Favicon -->
+    <link rel="icon" href="{% static 'system/img/core-img/favicon.png' %}">
+
+    <link rel="stylesheet" href="{% static 'system/css/default-assets/datatables.bootstrap4.css' %}">
+    <link rel="stylesheet" href="{% static 'system/css/default-assets/responsive.bootstrap4.css' %}">
+    <link rel="stylesheet" href="{% static 'system/css/default-assets/buttons.bootstrap4.css' %}">
+    <link rel="stylesheet" href="{% static 'system/css/default-assets/select.bootstrap4.css' %}">
+
+    <!-- Master Stylesheet [If you remove this CSS file, your file will be broken undoubtedly.] -->
+    <link rel="stylesheet" href="{% static 'system/style.css' %}">
+
+</head>
+
+<body>
+    <!-- Preloader -->
+    <div id="preloader">
+        <div class="preloader-load"></div>
+    </div>
+    <!-- Preloader -->
+
+    <!-- ======================================
+    ******* Page Wrapper Area Start **********
+    ======================================= -->
+    <div class="ecaps-page-wrapper">
+        <!-- Sidemenu Area -->
+        <div class="ecaps-sidemenu-area">
+            <!-- Desktop Logo -->
+            <div class="ecaps-logo">
+                <a href="#"><img class="desktop-logo" src="{% static 'system/img/core-img/logo.png' %}" alt="Desktop Logo"> <img class="small-logo" src="{% static 'system/img/core-img/small-logo.png' %}" alt="Mobile Logo"></a>
+            </div>
+
+            <!-- Side Nav -->
+            {% include 'layouts/partials/sidebar.inc.html' %}
+        </div>
+
+        <!-- Page Content -->
+        <div class="ecaps-page-content">
+                <!-- Top Header Area -->
+               {% include 'layouts/partials/topbar.inc.html' %}
+                {% block content %}{% endblock %}
+                <!-- Main Content Area -->
+
+        </div>
+
+    </div>
+
+    <!-- ======================================
+    ********* Page Wrapper Area End ***********
+    ======================================= -->
+
+    <!-- Must needed plugins to the run this Template -->
+    <script src="{% static 'system/js/jquery.min.js' %}"></script>
+    <script src="{% static 'system/js/popper.min.js' %}"></script>
+    <script src="{% static 'system/js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'system/js/bundle.js' %}"></script>
+    <script src="{% static 'system/js/default-assets/setting.js' %}"></script>
+    <script src="{% static 'system/js/default-assets/fullscreen.js' %}"></script>
+
+    <!-- Active JS -->
+    <script src="{% static 'system/js/default-assets/active.js' %}"></script>
+
+    <!-- These plugins only need for the run this page -->
+    <script src="{% static 'system/js/default-assets/ammap.min.js' %}"></script>
+    <script src="{% static 'system/js/default-assets/radar.js' %}"></script>
+    <script src="{% static 'system/js/default-assets/widget-page-chart-active.js' %}"></script>
+    <script src="{% static 'system/js/default-assets/apexchart.min.js' %}"></script>
+    <script src="{% static 'system/js/default-assets/jquery.datatables.min.js' %}"></script>
+    <script src="{% static 'system/js/default-assets/datatables.bootstrap4.js' %}"></script>
+    <script src="{% static 'system/js/default-assets/datatable-responsive.min.js' %}"></script>
+    <script src="{% static 'system/js/default-assets/responsive.bootstrap4.min.js' %}"></script>
+    <script src="{% static 'system/js/default-assets/datatable-button.min.js' %}"></script>
+    <script src="{% static 'system/js/default-assets/button.bootstrap4.min.js' %}"></script>
+    <script src="{% static 'system/js/default-assets/button.html5.min.js' %}"></script>
+    <script src="{% static 'system/js/default-assets/button.flash.min.js' %}"></script>
+    <script src="{% static 'system/js/default-assets/button.print.min.js' %}"></script>
+    <script src="{% static 'system/js/default-assets/datatables.keytable.min.js' %}"></script>
+    <script src="{% static 'system/js/default-assets/datatables.select.min.js' %}"></script>
+    <script src="{% static 'system/js/default-assets/demo.datatable-init.js' %}"></script>
+{#    <script src="{% static 'system/js/default-assets/dashboard-active.js' %}"></script>#}
+
+</body>
+
+</html>

@@ -1,0 +1,50 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="description" content="">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+     <title>{% block title %}{% endblock %}</title>
+
+    <!-- Favicon -->
+    <link rel="icon" href="{% static 'system/img/core-img/favicon.png' %}">
+
+    <!-- Master Stylesheet [If you remove this CSS file, your file will be broken undoubtedly.] -->
+    <link rel="stylesheet" href="{% static 'system/style.css' %}">
+
+</head>
+
+<body class="login-area">
+
+    <!-- Preloader -->
+    <div id="preloader">
+        <div class="preloader-load"></div>
+    </div>
+    <!-- Preloader -->
+
+    <!-- ======================================
+    ******* Page Wrapper Area Start **********
+    ======================================= -->
+    {% block content %}
+
+    {% endblock %}
+
+    <!-- ======================================
+    ********* Page Wrapper Area End ***********
+    ======================================= -->
+
+    <!-- Must needed plugins to the run this Template -->
+    <script src="{% static 'system/js/jquery.min.js' %}"></script>
+    <script src="{% static 'system/js/popper.min.js' %}"></script>
+    <script src="{% static 'system/js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'system/js/bundle.js' %}"></script>
+    <!-- Active JS -->
+    <script src="{% static 'system/js/default-assets/active.js' %}"></script>
+
+</body>
+
+</html>
