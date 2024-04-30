@@ -38,10 +38,6 @@
                                                     rowspan="1" colspan="1"
                                                     aria-label="Position: activate to sort column ascending">Value
                                                 </th>
-                                                <th class="sorting" tabindex="0" aria-controls="datatable-buttons"
-                                                    rowspan="1" colspan="1"
-                                                    aria-label="Office: activate to sort column ascending">Equipment
-                                                </th>
                                                 <th>Action</th>
                                             </tr>
                                             </thead>
@@ -52,10 +48,9 @@
                                                 	<tr role="row" class="odd">
                                                         <td tabindex="0" class="sorting_1">{{ odometer.name }}</td>
                                                         <td style="">{{ odometer.value }}</td>
-                                                        <td style="">{{ odometer.equipment }}</td>
                                                         <td>
-                                                            <a href="#" class="btn btn-info btn-sm"><i class="zmdi zmdi-edit"></i></a>
-                                                            <a href="#" class="btn btn-danger btn-sm"><i class="zmdi zmdi-delete"></i></a>
+                                                           <a href="{% url 'system:view_odometer' odometer.id %}" class="btn-dark text-white btn-sm"><i class="fa fa-eye"></i></a>
+                                                            <a href="{% url 'system:view_odometer' odometer.id %}#edit-odometer" class="btn-info text-white btn-sm"><i class="fa fa-edit"></i></a>
                                                         </td>
                                                     </tr>
                                                 {% empty %}

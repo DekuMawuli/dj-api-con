@@ -63,8 +63,8 @@
                                                         <td style="">{{ inspection.equipment.name }}</td>
                                                         <td style="">{{ inspection.odometer_value }}</td>
                                                         <td>
-                                                            <a href="#" class="btn btn-info btn-sm"><i class="zmdi zmdi-edit"></i></a>
-                                                            <a href="#" class="btn btn-danger btn-sm"><i class="zmdi zmdi-delete"></i></a>
+                                                            <a href="{% url 'system:view_inspection' inspection.id %}" class="btn-dark text-white btn-sm"><i class="fa fa-eye"></i></a>
+                                                            <a href="#" class="btn-info text-white btn-sm"><i class="fa fa-edit"></i></a>
                                                         </td>
                                                     </tr>
                                                 {% empty %}

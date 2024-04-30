@@ -62,7 +62,7 @@ def change_password(request):
 @require_POST
 def update_password(request):
     header = {
-        'Authorization': f'Token {request.session.get("token")}',
+        # 'Authorization': f'Token {request.session.get("token")}',
         'Content-Type': 'application/json',
     }
     password = request.POST.get('new_password')
@@ -76,13 +76,12 @@ def update_password(request):
     }
     response = api_request.post(APIConstants.RESET_PASSWORD_URL, data=json.dumps(data), headers=header)
     if response.status_code == 400:
-
         messages.success(request, 'Password Changed successfully')
         del request.session['email']
         del request.session['token']
         del request.session['is_verified']
         del request.session['fullname']
-        return redirect('system:login_page')
+        return redirect('system:dashboard')
 
     return redirect("system:change_password")
 

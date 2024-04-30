@@ -1,10 +1,65 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>$Title$</title>
-</head>
-<body>
-$END$
-</body>
-</html>
+{% extends 'layouts/dashboard_base.html' %}
+
+{% block title %}
+   Edit {{ equipment.name }}
+{% endblock %}
+
+
+{% block content %}
+    <div class="main-content">
+        <div class="container-fluid">
+            <div class="row">
+                {% include 'layouts/partials/alerts.inc.html' %}
+                <div class="col-12 box-margin">
+                    <div class="card">
+                        <div class="card-body">
+                            <form action="{% url 'system:update_equipment' equipment.id %}" enctype="multipart/form-data" method="POST">
+                                {% csrf_token %}
+                                <div class="text-center">
+                                    <img src="{{ equipment.image_url }}" height="300" width="300" alt="">
+                                </div>
+                                <div class="form-group">
+                                    <label for="">Name</label>
+                                    <input type="hidden" name="old_image" value="{{ equipment.image_url }}">
+                                    <input type="text" class="form-control" value="{{ equipment.name }}" name="name" placeholder="Name of Equipment" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="">Model</label>
+                                    <input type="text" class="form-control" value="{{ equipment.model }}"  name="model" placeholder="Model" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="">Engine Number</label>
+                                    <input type="text" class="form-control" value="{{ equipment.engine_number }}"  name="engine_number" placeholder="Engine Number" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="">Year</label>
+                                    <input type="text" class="form-control" value="{{ equipment.year }}"  name="year" placeholder="Year" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="">Image</label>
+                                    <input type="file" class="form-control-file" value="{{ equipment.name }}"  name="image_url" >
+                                </div>
+                                <div class="form-group">
+                                    <label for="">Technicians</label>
+                                    <select class="form-control" name="technicians" multiple>
+                                        {% for technician in technicians %}
+                                            <option value="{{ technician.id }}" {% if technician.id in equipment.technicians %}selected {% endif %}>
+                                                {{ technician.first_name }} {{ technician.last_name }}
+                                            </option>
+                                        {% endfor %}
+
+                                    </select>
+                                </div>
+                                <div class="form-group text-center">
+                                    <button type="submit" class="btn btn-info">Update Equipment</button>
+                                </div>
+                            </form>
+                        </div> <!-- end card body-->
+                    </div> <!-- end card -->
+                </div><!-- end col-->
+
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

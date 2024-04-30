@@ -41,6 +41,53 @@ def all_odometers(request):
     return render(request, "system/odometers/all-odometers.html", ctx)
 
 
+@user_verified
+@user_authenticated
+def view_odometer(request, pk):
+    headers = {
+        'Authorization': f'Token {request.session.get("token")}',
+        'Content-Type': 'application/json'
+    }
+    response = api_request.get(f"{APIConstants.ALL_ODOMETERS}{pk}/", headers=headers)
+    equip_response = api_request.get(APIConstants.EQUIPMENTS_URL, headers=headers)
+    single_equip = api_request.get(f"{APIConstants.EQUIPMENTS_URL}{pk}/", headers=headers)
+    ctx = {
+        'odometer': response.json(),
+        'equipments': equip_response.json(),
+        "selected_equipment": single_equip.json()
+    }
+    return render(request, "system/odometers/view-odometer.html", ctx)
+
+
+@user_verified
+@user_authenticated
+def edit_odometer(request, pk):
+    headers = {
+        'Authorization': f'Token {request.session.get("token")}',
+        'Content-Type': 'application/json'
+    }
+    response = api_request.get(f"{APIConstants.ALL_ODOMETERS}/{pk}/", headers=headers)
+    print(request.session.get("token"))
+    ctx = {
+        'odometer': response.json(),
+    }
+    return render(request, "system/odometers/edit-odometer.html", ctx)
+
+@user_verified
+@user_authenticated
+def update_odometer(request, pk):
+    headers = {
+        'Authorization': f'Token {request.session.get("token")}',
+        'Content-Type': 'application/json'
+    }
+    response = api_request.get(f"{APIConstants.ALL_ODOMETERS}/{pk}/", headers=headers)
+    print(request.session.get("token"))
+    ctx = {
+        'odometer': response.json(),
+    }
+    return redirect("system:all_odometers")
+
+
 @require_POST
 @user_verified
 @user_authenticated
@@ -109,6 +156,104 @@ def save_user(request):
 
 @user_verified
 @user_authenticated
+def all_technicians(request):
+    print(request.session.get('token'))
+    header = {
+        'Authorization': f'Token {request.session.get("token")}',
+        'Content-Type': 'application/json'
+    }
+    response = api_request.get(APIConstants.ALL_USERS_URL, headers=header)
+    users = response.json()
+    technicians = [user for user in users if user['role'] == "TECHNICIAN"]
+    ctx = {
+        'technicians': technicians
+    }
+    return render(request, "system/users/technicians.html", ctx)
+
+
+@user_verified
+@user_authenticated
+def view_technician(request, pk):
+    header = {
+        'Authorization': f'Token {request.session.get("token")}',
+        'Content-Type': 'application/json'
+    }
+    response = api_request.get(f"{APIConstants.API_BASE_URL}/users/{pk}", headers=header)
+    ctx = {
+        'technician': response.json()
+    }
+    return render(request, "system/users/view-technicians.html", ctx)
+
+
+@user_verified
+@user_authenticated
+def edit_technician(request, pk):
+    header = {
+        'Authorization': f'Token {request.session.get("token")}',
+        'Content-Type': 'application/json'
+    }
+    response = api_request.get(f"{APIConstants.API_BASE_URL}/users/{pk}", headers=header)
+    ctx = {
+        'technician': response.json()
+    }
+    return render(request, "system/users/edit-technician.html", ctx)
+
+
+@user_verified
+@user_authenticated
+def view_user(request, pk):
+    header = {
+        'Authorization': f'Token {request.session.get("token")}',
+        'Content-Type': 'application/json'
+    }
+    response = api_request.get(f"{APIConstants.API_BASE_URL}/users/{pk}/", headers=header)
+    ctx = {
+        'user': response.json()
+    }
+    return render(request, "system/users/view-user.html", ctx)
+
+
+@user_verified
+@user_authenticated
+def edit_user(request, pk):
+    header = {
+        'Authorization': f'Token {request.session.get("token")}',
+        'Content-Type': 'application/json'
+    }
+    response = api_request.get(f"{APIConstants.API_BASE_URL}/users/{pk}/", headers=header)
+    ctx = {
+        'user': response.json()
+    }
+    return render(request, "system/users/edit-user.html", ctx)
+
+
+
+@require_POST
+@user_verified
+@user_authenticated
+def save_technician(request):
+    header = {
+        'Authorization': f'Token {request.session.get("token")}',
+        'Content-Type': 'application/json'
+    }
+    first_name = request.POST.get("first_name")
+    last_name = request.POST.get("last_name")
+    email = request.POST.get("email")
+    phone_number = request.POST.get("phone_number")
+    role = request.POST.get("role")
+    data = {
+        "first_name": first_name, "last_name": last_name,
+        "email": email, "phone_number": phone_number,
+        "role": role,
+        # "created": timezone.now(),"technician_equipment": []
+    }
+    response = api_request.post(APIConstants.CREATE_USER_URL, data=json.dumps(data), headers=header)
+    print(response.json())
+    return redirect("system:all_technicians")
+
+
+@user_verified
+@user_authenticated
 def all_service_types(request):
     header = {
         'Authorization': f'Token {request.session.get("token")}',
@@ -120,6 +265,21 @@ def all_service_types(request):
         'service_types': service_types
     }
     return render(request, "system/service-type/service-types.html", ctx)
+
+
+@user_verified
+@user_authenticated
+def view_service_type(request, pk):
+    header = {
+        'Authorization': f'Token {request.session.get("token")}',
+        'Content-Type': 'application/json'
+    }
+    response = api_request.get(f"{APIConstants.API_BASE_URL}/service-types/{pk}/", headers=header)
+    service_type = response.json()
+    ctx = {
+        'service_type': service_type
+    }
+    return render(request, "system/service-type/view-service-type.html", ctx)
 
 
 @require_POST
@@ -159,6 +319,20 @@ def all_purchasers(request):
     }
     return render(request, "system/purchasers/purchasers.html", ctx)
 
+
+@user_verified
+@user_authenticated
+def view_purchaser(request, pk):
+    header = {
+        'Authorization': f'Token {request.session.get("token")}',
+        'Content-Type': 'application/json'
+    }
+    response = api_request.get(f"{APIConstants.API_BASE_URL}/purchaser/{pk}/", headers=header)
+    purchaser = response.json()
+    ctx = {
+        'purchaser': purchaser
+    }
+    return render(request, "system/purchasers/view-purchaser.html", ctx)
 
 
 # Purchasers
@@ -222,6 +396,20 @@ def all_referrers(request):
         'referrers': response.json()
     }
     return render(request, "system/referrers/referrers.html", ctx)
+
+
+@user_verified
+@user_authenticated
+def view_referrer(request, pk):
+    header = {
+        'Authorization': f'Token {request.session.get("token")}',
+        'Content-Type': 'application/json'
+    }
+    response = api_request.get(f"{APIConstants.API_BASE_URL}/referrer/{pk}/", headers=header)
+    ctx = {
+        'referrer': response.json()
+    }
+    return render(request, "system/referrers/view-referrer.html", ctx)
 
 
 # Referrers
@@ -288,6 +476,39 @@ def all_equipments(request):
     return render(request, "system/equipments/all-equipments.html", ctx)
 
 
+
+@user_verified
+@user_authenticated
+def view_equipment(request, pk):
+    header = {
+        'Authorization': f'Token {request.session.get("token")}',
+        'Content-Type': 'application/json',
+    }
+    response = api_request.get(f"{APIConstants.EQUIPMENTS_URL}{pk}/", headers=header)
+
+    ctx = {
+        'equipment': response.json()
+    }
+    return render(request, "system/equipments/view-equipment.html", ctx)
+
+
+@user_verified
+@user_authenticated
+def edit_equipment(request, pk):
+    header = {
+        'Authorization': f'Token {request.session.get("token")}',
+        'Content-Type': 'application/json',
+    }
+    response = api_request.get(f"{APIConstants.EQUIPMENTS_URL}/{pk}/", headers=header)
+    user_response = api_request.get(APIConstants.ALL_USERS_URL, headers=header)
+    technicians = [user for user in user_response.json() if user['role'] == "TECHNICIAN"]
+    ctx = {
+        'equipment': response.json(),
+        'technicians': technicians,
+    }
+    return render(request, "system/equipments/edit-equipment.html", ctx)
+
+
 @require_POST
 @user_verified
 @user_authenticated
@@ -319,6 +540,43 @@ def save_equipment(request):
     return redirect("system:all_equipments")
 
 
+@require_POST
+@user_verified
+@user_authenticated
+def update_equipment(request, pk):
+    header = {
+        'Authorization': f'Token {request.session.get("token")}',
+        'Content-Type': 'application/json',
+    }
+    name = request.POST.get("name")
+    model = request.POST.get("model")
+    engine_number = request.POST.get("engine_number")
+    year = request.POST.get("year")
+    image_url = request.FILES.get("image_url")
+    old_image = request.POST.get("old_image")
+    technicians = request.POST.getlist('technicians')
+    uploaded_image = None
+    if image_url is not None:
+        uploaded_image = cloudinary.uploader.upload(file=image_url)
+
+    data = {
+        "name": name,
+        "model": model,
+        "engine_number": engine_number,
+        "year": year,
+        "image_url": uploaded_image['url'] if uploaded_image is not None else old_image,
+        'technicians_id': technicians
+    }
+
+    response = api_request.patch(
+        f"{APIConstants.API_BASE_URL}/equipments/{pk}/", headers=header, data=json.dumps(data))
+    result = response.json()
+    print(response.json())
+    # if result["name"] is not None:
+    #     messages.success(request, "Equipment added Successfully")
+    return redirect("system:all_equipments")
+
+
 # Sales
 @user_verified
 @user_authenticated
@@ -337,6 +595,25 @@ def all_sales(request):
         "purchasers": purchaser_response.json()
     }
     return render(request, "system/sales/all-sales.html", ctx)
+
+
+@user_verified
+@user_authenticated
+def view_sale(request, pk):
+    header = {
+        'Authorization': f'Token {request.session.get("token")}',
+        'Content-Type': 'application/json'
+    }
+    response = api_request.get(f"{APIConstants.API_BASE_URL}/sales/{pk}/", headers=header)
+    referrer_response = api_request.get(APIConstants.ALL_REFERRERS_URL, headers=header)
+    purchaser_response = api_request.get(APIConstants.ALL_PURCHASERS_URL, headers=header)
+    sale = response.json()
+    ctx = {
+        'sale': sale,
+        "referrers": referrer_response.json(),
+        "purchasers": purchaser_response.json()
+    }
+    return render(request, "system/sales/view-sale.html", ctx)
 
 
 @require_POST
@@ -390,6 +667,27 @@ def all_inspections(request):
         "users": users_response.json()
     }
     return render(request, "system/inspections/all-inspections.html", ctx)
+
+
+@user_verified
+@user_authenticated
+def view_inspection(request, pk):
+    header = {
+        'Authorization': f'Token {request.session.get("token")}',
+        'Content-Type': 'application/json'
+    }
+    response = api_request.get(f"{APIConstants.ALL_INSPECTIONS_URL}/{pk}/", headers=header)
+    equipments_response = api_request.get(APIConstants.EQUIPMENTS_URL, headers=header)
+    odometer_response = api_request.get(APIConstants.ALL_ODOMETERS, headers=header)
+    users_response = api_request.get(APIConstants.ALL_USERS_URL, headers=header)
+
+    ctx = {
+        'inspection': response.json(),
+        "equipments": equipments_response.json(),
+        "odometers": odometer_response.json(),
+        "users": users_response.json()
+    }
+    return render(request, "system/inspections/view-inspection.html", ctx)
 
 
 @require_POST
@@ -449,6 +747,26 @@ def all_services(request):
         "service_types": service_type_response.json(),
     }
     return render(request, "system/services/all-services.html", ctx)
+
+
+@user_verified
+@user_authenticated
+def view_service(request, pk):
+    header = {
+        'Authorization': f'Token {request.session.get("token")}',
+        'Content-Type': 'application/json'
+    }
+    response = api_request.get(f"{APIConstants.ALL_SERVICES_URL}/{pk}/", headers=header)
+    equipments_response = api_request.get(APIConstants.EQUIPMENTS_URL, headers=header)
+    odometer_response = api_request.get(APIConstants.ALL_ODOMETERS, headers=header)
+    service_type_response = api_request.get(APIConstants.ALL_SERVICE_TYPES, headers=header)
+    ctx = {
+        'service': response.json(),
+        "equipments": equipments_response.json(),
+        "odometers": odometer_response.json(),
+        "service_types": service_type_response.json(),
+    }
+    return render(request, "system/services/view-service.html", ctx)
 
 
 @require_POST

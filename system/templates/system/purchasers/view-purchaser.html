@@ -1,10 +1,83 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>$Title$</title>
-</head>
-<body>
-$END$
-</body>
-</html>
+{% extends 'layouts/dashboard_base.html' %}
+
+{% block title %}
+    {{ purchaser.name }}
+{% endblock %}
+
+
+{% block content %}
+    <div class="main-content">
+        <div class="container-fluid">
+            <div class="row">
+                {% include 'layouts/partials/alerts.inc.html' %}
+                <div class="col-12 box-margin">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-content-center mb-2">
+                                <h4 class="card-title mb-2">Purchaser Details</h4>
+                            </div>
+                            <table class="table table-striped table-bordered table-inverse table-responsive-sm">
+                                <thead class="thead-inverse">
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Phone</th>
+                                    <th>Email</th>
+                                    <th>Digital Addr.</th>
+                                    <th>Residential Addr.</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <td>{{ purchaser.name }}</td>>
+                                    <td>{{ purchaser.phone_number }}</td>>
+                                    <td>{{ purchaser.email }}</td>>
+                                    <td>{{ purchaser.digital_address }}</td>>
+                                    <td>{{ purchaser.residential_address }}</td>>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div> <!-- end card body-->
+                    </div> <!-- end card -->
+                </div><!-- end col-->
+                <div class="col-12 box-margin">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-content-center mb-2">
+                                <h4 class="card-title mb-2">Change Information</h4>
+                            </div>
+
+                            <form action="{% url 'system:save_purchaser' %}" method="POST">
+                                {% csrf_token %}
+                                <div class="form-group">
+                                    <label for="">Name</label>
+                                    <input type="text" class="form-control" value="{{ purchaser.name }}" name="name" placeholder="Name of Purchaser" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="">Phone Number</label>
+                                    <input type="text" class="form-control" value="{{ purchaser.phone_number }}" name="phone_number" placeholder="Phone Number" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="">Email</label>
+                                    <input type="email" class="form-control" value="{{ purchaser.email }}" name="email" placeholder="Email" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="">Digital Address</label>
+                                    <input type="text" class="form-control" value="{{ purchaser.digital_address }}" name="digital_address" placeholder="Digital Address" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="">Residential Address</label>
+                                    <textarea class="form-control" name="residential_address" id="" rows="3">{{ purchaser.residential_address }}</textarea>
+                                </div>
+                                <div class="form-group text-center">
+                                    <button type="submit" class="btn btn-info">Update Purchaser</button>
+                                </div>
+                            </form>
+                        </div> <!-- end card body-->
+                    </div> <!-- end card -->
+                </div>
+                <!-- end col-->
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
