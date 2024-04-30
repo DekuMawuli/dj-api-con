@@ -3,7 +3,9 @@
                 <div class="left-side-content-area d-flex align-items-center">
                     <!-- Mobile Logo -->
                     <div class="mobile-logo mr-3 mr-sm-4">
-                        <a href="{% url 'system:dashboard' %}"><img src="{% static 'system/img/core-img/small-logo.png' %}" alt="Mobile Logo"></a>
+                        <a href="{% url 'system:dashboard' %}">
+                            <h5 class="text-danger">E.M</h5>
+                        </a>
                     </div>
 
                     <!-- Triggers -->
@@ -29,14 +31,14 @@
 
                         <li class="nav-item dropdown">
                             <button type="button" class="btn dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <img src="{% static 'system/img/member-img/4.png' %}" alt=""> <br> <span style="font-size: 14px">{{ request.session.fullname }}</span>
+                                <i class="fa fa-user text-danger"></i> <br> <span style="font-size: 14px">{{ request.session.fullname }}</span>
                             </button>
                             <div class="dropdown-menu header-profile dropdown-menu-right">
                                 <!-- User Profile Area -->
                                 <div class="user-profile-area">
 
                                     <a href="##" class="dropdown-item"><i class="zmdi zmdi-account profile-icon" aria-hidden="true"></i> My profile</a>
-                                    <a href="##" class="dropdown-item"><i class="zmdi zmdi-lock-open profile-icon" aria-hidden="true"></i> Change Password</a>
+                                    <a href="{% url 'system:change_password' %}" class="dropdown-item"><i class="zmdi zmdi-lock-open profile-icon" aria-hidden="true"></i> Change Password</a>
                                     <a href="{% url 'system:sign_out' %}" class="dropdown-item"><i class="fa fa-sign-out" aria-hidden="true"></i> Sign-out</a>
                                 </div>
                             </div>

@@ -1,0 +1,160 @@
+{% extends 'layouts/dashboard_base.html' %}
+
+{% block title %}
+    Inspections
+{% endblock %}
+
+
+{% block content %}
+    <div class="main-content">
+        <div class="container-fluid">
+            {% include 'layouts/partials/alerts.inc.html' %}
+            <div class="row">
+                <div class="col-12 box-margin">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-content-center mb-2">
+                                <h4 class="card-title mb-2">All Inspections</h4>
+                                <button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#add-odometer">
+                                    <i class="zmdi zmdi-plus"></i> Add Inspection
+                                </button>
+                            </div>
+
+                            <div id="datatable-buttons_wrapper" class="dataTables_wrapper dt-bootstrap4 no-footer">
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <table id="datatable-buttons"
+                                               class="table table-striped dt-responsive nowrap w-100 dataTable no-footer dtr-inline collapsed"
+                                               role="grid" aria-describedby="datatable-buttons_info"
+                                               style="width: 1197px;">
+                                            <thead>
+                                            <tr role="row">
+                                                <th class="sorting_asc" tabindex="0" aria-controls="datatable-buttons"
+                                                    rowspan="1" colspan="1"
+                                                    aria-sort="ascending"
+                                                    aria-label="Name: activate to sort column descending">Name
+                                                </th>
+                                                <th class="sorting_asc" tabindex="0" aria-controls="datatable-buttons"
+                                                    rowspan="1" colspan="1"
+                                                    aria-sort="ascending"
+                                                    aria-label="Name: activate to sort column descending">Inspected By
+                                                </th>
+                                                <th class="sorting" tabindex="0" aria-controls="datatable-buttons"
+                                                    rowspan="1" colspan="1"
+                                                    aria-label="Position: activate to sort column ascending">Equipment
+                                                </th>
+                                                <th class="sorting" tabindex="0" aria-controls="datatable-buttons"
+                                                    rowspan="1" colspan="1"
+                                                    aria-label="Office: activate to sort column ascending">Odometer Value
+                                                </th>
+                                                <th class="sorting">Action
+                                                </th>
+                                            </tr>
+                                            </thead>
+
+
+                                            <tbody>
+                                                {% for inspection in inspections %}
+                                                	<tr role="row" class="odd">
+                                                        <td tabindex="0" class="sorting_1">{{ inspection.name }}</td>
+                                                        <td tabindex="0" class="sorting_1">
+                                                            {{ inspection.technician.first_name }} {{ inspection.technician.last_name }}
+                                                        </td>
+                                                        <td style="">{{ inspection.equipment.name }}</td>
+                                                        <td style="">{{ inspection.odometer_value }}</td>
+                                                        <td>
+                                                            <a href="#" class="btn btn-info btn-sm"><i class="zmdi zmdi-edit"></i></a>
+                                                            <a href="#" class="btn btn-danger btn-sm"><i class="zmdi zmdi-delete"></i></a>
+                                                        </td>
+                                                    </tr>
+                                                {% empty %}
+                                                	<tr>
+                                                        <td colspan="4" class="text-center">No Records Available</td>
+                                                    </tr>
+                                                {% endfor %}
+
+
+
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div> <!-- end card body-->
+                    </div> <!-- end card -->
+                </div><!-- end col-->
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="add-odometer" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Add new Inspection</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form action="{% url 'system:save_inspection' %}" enctype="multipart/form-data" method="POST">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label for="">Name</label>
+                            <input type="text" class="form-control" name="name" placeholder="Name of Inspection" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="">Current Location</label>
+                            <input type="text" class="form-control" name="current_location" placeholder="Current Location" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="">Odometer Value</label>
+                            <select class="form-control" name="odometer_value" id="">
+                                <option value="" selected>-- Select Odometer Value --</option>
+                                {% for odometer in odometers %}
+                                    <option value="{{ odometer.value }}">{{ odometer.name }}-{{ odometer.value }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="">Equipment</label>
+                            <select class="form-control" name="equipment_pk" id="">
+                                <option value="" selected>-- Select Equipment --</option>
+                                {% for equipment in equipments %}
+                                    <option value="{{ equipment.id }}">{{ equipment.name }}</option>
+                                {% endfor %}
+
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="">Notes</label>
+                            <textarea class="form-control" name="notes" id="" rows="3"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for=""></label>
+                            <input type="file" class="form-control-file" name="inspection_pics" id="" multiple>
+                        </div>
+                        <div class="form-group">
+                            <label for="">Technician</label>
+                            <select class="form-control" name="technician_pk" id="">
+                                <option value="" selected>-- Select Technician --</option>
+                                {% for user in users %}
+                                    <option value="{{ user.id }}">{{ user.first_name }} {{ user.last_name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="form-group text-center">
+                            <button type="submit" class="btn btn-success">Save Inspection</button>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+

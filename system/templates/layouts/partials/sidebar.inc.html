@@ -5,73 +5,107 @@
         <nav>
             <ul class="sidebar-menu" data-widget="tree">
                 <li class="{% if request.path == '/'  %}active{% endif %}"><a href="{% url 'system:dashboard' %}"><i class="zmdi zmdi-view-web"></i> <span>Dashboard</span></a></li>
-                <li class="treeview">
-                    <a href="javascript:void(0)"><i class="zmdi zmdi-settings"></i> <span>Equipments</span> <i
-                            class="fa fa-angle-right"></i></a>
-                    <ul class="treeview-menu">
-                        <li><a href="calendar.html">- All Equipments</a></li>
-                        <li><a href="widgets.html">- Add Equipment</a></li>
-                    </ul>
-                </li>
-                <li class="treeview">
-                    <a href="javascript:void(0)"><i class="zmdi zmdi-zoom-in"></i> <span>Inspections</span> <i
-                            class="fa fa-angle-right"></i></a>
-                    <ul class="treeview-menu">
-                        <li><a href="calendar.html">- All Inspections</a></li>
-                        <li><a href="widgets.html">- Add Inspection</a></li>
-                    </ul>
-                </li>
-                <li class="treeview {% if 'odometer' in request.path %}active{% endif %}">
-                    <a href="javascript:void(0)"><i class="zmdi zmdi-code-smartphone"></i> <span>Odometers</span> <i
-                            class="fa fa-angle-right"></i></a>
-                    <ul class="treeview-menu">
-                        <li><a href="{% url 'system:all_odometers' %}">- All Odometers</a></li>
-{#                        <li><a href="widgets.html">- Add Odometers</a></li>#}
-                    </ul>
-                </li>
-                <li class="treeview {% if 'purchaser' in request.path %}active{% endif %}">
-                    <a href="javascript:void(0)"><i class="zmdi zmdi-money"></i> <span>Purchasers</span> <i
-                            class="fa fa-angle-right"></i></a>
-                    <ul class="treeview-menu">
-                        <li><a href="{% url 'system:all_purchasers' %}">- All Purchasers</a></li>
-{#                        <li><a href="widgets.html">- Add Purchaser</a></li>#}
-                    </ul>
-                </li>
-                <li class="treeview">
-                    <a href="javascript:void(0)"><i class="zmdi zmdi-share"></i> <span>Referrers</span> <i
-                            class="fa fa-angle-right"></i></a>
-                    <ul class="treeview-menu">
-                        <li><a href="calendar.html">- All Referrers</a></li>
-                        <li><a href="widgets.html">- Add Referrer</a></li>
-                    </ul>
-                </li>
-                <li class="treeview">
+                {% if request.session.role == "SUPER_ADMIN" or request.session.role == "BACK_OFFICE"   %}
+                	<li class="treeview">
+                        <a href="javascript:void(0)"><i class="zmdi zmdi-settings"></i> <span>Equipments</span> <i
+                                class="fa fa-angle-right"></i></a>
+                        <ul class="treeview-menu">
+                            <li><a href="{% url 'system:all_equipments' %}">- All Equipments</a></li>
+    {#                        <li><a href="widgets.html">- Add Equipment</a></li>#}
+                        </ul>
+                    </li>
+                {% endif %}
+                {% if request.session.role == "SUPER_ADMIN" or request.session.role == "TECHNICIAN" or request.session.role == "BACK_OFFICE"  %}
+                	<li class="treeview">
+                        <a href="javascript:void(0)"><i class="zmdi zmdi-zoom-in"></i> <span>Inspections</span> <i
+                                class="fa fa-angle-right"></i></a>
+                        <ul class="treeview-menu">
+                            <li><a href="{% url 'system:all_inspections' %}">- All Inspections</a></li>
+    {#                        <li><a href="widgets.html">- Add Inspection</a></li>#}
+                        </ul>
+                    </li>
+                {% endif %}
+                {% if request.session.role == "SUPER_ADMIN" or request.session.role == "BACK_OFFICE"   %}
+                	<li class="treeview {% if 'odometer' in request.path %}active{% endif %}">
+                        <a href="javascript:void(0)"><i class="zmdi zmdi-code-smartphone"></i> <span>Odometers</span> <i
+                                class="fa fa-angle-right"></i></a>
+                        <ul class="treeview-menu">
+                            <li><a href="{% url 'system:all_odometers' %}">- All Odometers</a></li>
+    {#                        <li><a href="widgets.html">- Add Odometers</a></li>#}
+                        </ul>
+                    </li>
+                {% endif %}
+                {% if request.session.role == "SUPER_ADMIN" or request.session.role == "SALES" or request.session.role == "BACK_OFFICE" %}
+                	<li class="treeview {% if 'purchaser' in request.path %}active{% endif %}">
+                        <a href="javascript:void(0)"><i class="zmdi zmdi-money"></i> <span>Purchasers</span> <i
+                                class="fa fa-angle-right"></i></a>
+                        <ul class="treeview-menu">
+                            <li><a href="{% url 'system:all_purchasers' %}">- All Purchasers</a></li>
+    {#                        <li><a href="widgets.html">- Add Purchaser</a></li>#}
+                        </ul>
+                    </li>
+                {% endif %}
+                {% if request.session.role == "SUPER_ADMIN" or request.session.role == "SALES" or request.session.role == "BACK_OFFICE" %}
+                    <li class="treeview">
+                        <a href="javascript:void(0)"><i class="zmdi zmdi-share"></i> <span>Referrers</span> <i
+                                class="fa fa-angle-right"></i></a>
+                        <ul class="treeview-menu">
+                            <li><a href="{% url 'system:all_referrers' %}">- All Referrers</a></li>
+    {#                        <li><a href="widgets.html">- Add Referrer</a></li>#}
+                        </ul>
+                    </li>
+                {% endif %}
+                {% if request.session.role == "SUPER_ADMIN" or request.session.role == "SALES" or request.session.role == "BACK_OFFICE" %}
+                    <li class="treeview">
                     <a href="javascript:void(0)"><i class="zmdi zmdi-receipt"></i> <span>Sales</span> <i
                             class="fa fa-angle-right"></i></a>
                     <ul class="treeview-menu">
-                        <li><a href="calendar.html">- All Sales</a></li>
-                        <li><a href="widgets.html">- Add Sale</a></li>
+                        <li><a href="{% url 'system:all_sales' %}">- All Sales</a></li>
+{#                        <li><a href="widgets.html">- Add Sale</a></li>#}
                     </ul>
                 </li>
-                <li class="treeview">
-                    <a href="javascript:void(0)"><i class="zmdi zmdi-collection-item"></i> <span>Service Types</span> <i
-                            class="fa fa-angle-right"></i></a>
-                    <ul class="treeview-menu">
-                        <li><a href="calendar.html">- All Service Types</a></li>
-                        <li><a href="widgets.html">- Add Service Type</a></li>
-                    </ul>
-                </li>
+                {% endif %}
+                {% if request.session.role == "SUPER_ADMIN" or request.session.role == "BACK_OFFICE"   %}
+                	<li class="treeview">
+                        <a href="javascript:void(0)"><i class="zmdi zmdi-collection-item"></i> <span>Service Types</span> <i
+                                class="fa fa-angle-right"></i></a>
+                        <ul class="treeview-menu">
+                            <li><a href="{% url 'system:all_service_types' %}">- All Service Types</a></li>
+    {#                        <li><a href="widgets.html">- Add Service Type</a></li>#}
+                        </ul>
+                    </li>
 
-                <li class="treeview">
-                    <a href="javascript:void(0)"><i class="zmdi zmdi-code-smartphone"></i> <span>Services</span> <i
-                            class="fa fa-angle-right"></i></a>
-                    <ul class="treeview-menu">
-                        <li><a href="calendar.html">- All Services</a></li>
-                        <li><a href="widgets.html">- Add Service</a></li>
-                    </ul>
-                </li>
-
-
+                {% endif %}
+                {% if request.session.role == "SUPER_ADMIN" or request.session.role == "TECHNICIAN" or request.session.role == "BACK_OFFICE" %}
+                	<li class="treeview">
+                        <a href="javascript:void(0)"><i class="zmdi zmdi-code-smartphone"></i> <span>Services</span> <i
+                                class="fa fa-angle-right"></i></a>
+                        <ul class="treeview-menu">
+                            <li><a href="{% url 'system:all_services' %}">- All Services</a></li>
+    {#                        <li><a href="widgets.html">- Add Service</a></li>#}
+                        </ul>
+                    </li>
+                {% endif %}
+                {% if request.session.role == "SUPER_ADMIN" or request.session.role == "BACK_OFFICE" %}
+                    <li class="treeview">
+                        <a href="javascript:void(0)"><i class="fa fa-users"></i> <span>Users</span> <i
+                                class="fa fa-angle-right"></i></a>
+                        <ul class="treeview-menu">
+                            <li><a href="{% url 'system:all_users' %}">- All Users</a></li>
+    {#                        <li><a href="widgets.html">- Add User</a></li>#}
+                        </ul>
+                    </li>
+                {% endif %}
+                {% if request.session.role == "SUPER_ADMIN" or request.session.role == "BACK_OFFICE"  %}
+                    <li class="treeview">
+                        <a href="javascript:void(0)"><i class="fa fa-users"></i> <span>Technicians</span> <i
+                                class="fa fa-angle-right"></i></a>
+                        <ul class="treeview-menu">
+                            <li><a href="{% url 'system:all_users' %}">- All Technicians</a></li>
+    {#                        <li><a href="widgets.html">- Add User</a></li>#}
+                        </ul>
+                    </li>
+                {% endif %}
             </ul>
         </nav>
     </div>

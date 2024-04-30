@@ -134,6 +134,15 @@ Last Updated: Mar 11, 2020
   margin: 0;
   padding: 0; }
 
+
+
+.img-rounded{
+  height: 70px;
+  width: 70px;
+  margin-right: 10px;
+  border-radius: 100%;
+}
+
 body {
   background-color: #edf1f6;
   color: #8492a6;

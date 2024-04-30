@@ -9,6 +9,7 @@
     <div class="main-content">
         <div class="container-fluid">
             <div class="row">
+                {% include 'layouts/partials/alerts.inc.html' %}
                 <div class="col-12 box-margin">
                     <div class="card">
                         <div class="card-body">
@@ -35,22 +36,53 @@
                                                 </th>
                                                 <th class="sorting" tabindex="0" aria-controls="datatable-buttons"
                                                     rowspan="1" colspan="1"
-                                                    aria-label="Position: activate to sort column ascending">Value
+                                                    aria-label="Position: activate to sort column ascending">Phone Number
                                                 </th>
                                                 <th class="sorting" tabindex="0" aria-controls="datatable-buttons"
                                                     rowspan="1" colspan="1"
-                                                    aria-label="Office: activate to sort column ascending">Equipment
+                                                    aria-label="Office: activate to sort column ascending">Email
+                                                </th>
+                                                <th class="sorting" tabindex="0" aria-controls="datatable-buttons"
+                                                    rowspan="1" colspan="1"
+                                                    aria-label="Office: activate to sort column ascending">Digital Address
+                                                </th>
+                                                <th class="sorting" tabindex="0" aria-controls="datatable-buttons"
+                                                    rowspan="1" colspan="1"
+                                                    aria-label="Office: activate to sort column ascending">Res. Address
+                                                </th>
+                                                <th class="sorting d-print-none" tabindex="0" aria-controls="datatable-buttons"
+                                                    rowspan="1" colspan="1"
+                                                    aria-label="Office: activate to sort column ascending">Actions
+                                                </th>
+                                                <th>
+                                                    Action
                                                 </th>
                                             </tr>
                                             </thead>
 
 
                                             <tbody>
-                                            <tr role="row" class="odd">
-                                                <td tabindex="0" class="sorting_1">Airi Satou</td>
-                                                <td style="">Accountant</td>
-                                                <td style="">Tokyo</td>
-                                            </tr>
+                                            {% for purchaser in purchasers %}
+                                            	<tr role="row" class="odd">
+                                                    <td tabindex="0" class="sorting_1">{{ purchaser.name }}</td>
+                                                    <td style="">{{ purchaser.phone_number }}</td>
+                                                    <td style="">{{ purchaser.email }}</td>
+                                                    <td style="">{{ purchaser.digital_address }}</td>
+                                                    <td style="">{{ purchaser.residential_address }}</td>
+                                                    <td style="" class="d-print-none0">
+                                                        <a href="{% url 'system:purchaser_sales' purchaser.id %}" class="btn btn-success btn-sm">
+                                                            <i class="zmdi zmdi-receipt"></i> View Sales
+                                                        </a>
+                                                    </td>
+                                                    <td>
+                                                        <a href="#" class="btn btn-info btn-sm"><i class="zmdi zmdi-edit"></i></a>
+                                                        <a href="#" class="btn btn-danger btn-sm"><i class="zmdi zmdi-delete"></i></a>
+                                                    </td>
+                                                </tr>
+                                            {% empty %}
+
+                                            {% endfor %}
+
 
                                             </tbody>
                                         </table>
@@ -76,7 +108,7 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <form action="" method="POST">
+                    <form action="{% url 'system:save_purchaser' %}" method="POST">
                         {% csrf_token %}
                         <div class="form-group">
                             <label for="">Name</label>
@@ -84,7 +116,7 @@
                         </div>
                         <div class="form-group">
                             <label for="">Phone Number</label>
-                            <input type="text" class="form-control" name="phone" placeholder="Phone Number" required>
+                            <input type="text" class="form-control" name="phone_number" placeholder="Phone Number" required>
                         </div>
                         <div class="form-group">
                             <label for="">Email</label>

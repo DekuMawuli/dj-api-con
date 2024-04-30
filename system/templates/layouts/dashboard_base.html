@@ -40,7 +40,9 @@
         <div class="ecaps-sidemenu-area">
             <!-- Desktop Logo -->
             <div class="ecaps-logo">
-                <a href="#"><img class="desktop-logo" src="{% static 'system/img/core-img/logo.png' %}" alt="Desktop Logo"> <img class="small-logo" src="{% static 'system/img/core-img/small-logo.png' %}" alt="Mobile Logo"></a>
+                <a href="{% url 'system:dashboard' %}">
+                    <h3 class="text-danger">Egle Motors</h3>
+                </a>
             </div>
 
             <!-- Side Nav -->
