@@ -25,8 +25,13 @@ SECRET_KEY = 'django-insecure-(d@ex9f+!6ux2tf6rt93oh372^wjc#=gdq72zi6sm7u7$a7)ny
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
+ON_SERVER = False
 
-ALLOWED_HOSTS = []
+
+if ON_SERVER:
+    ALLOWED_HOSTS = ["jp.seritrex.com"]
+else:
+    ALLOWED_HOSTS = []
 
 
 # Application definition
@@ -119,7 +124,11 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
 STATIC_URL = 'static/'
-STATIC_ROOT = BASE_DIR / 'staticfiles'
+
+if ON_SERVER:
+    STATIC_ROOT = '/home2/seritre1/public_html/jp/static'
+else:
+    STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
