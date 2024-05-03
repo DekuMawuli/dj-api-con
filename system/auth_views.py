@@ -75,7 +75,8 @@ def update_password(request):
         'password': password
     }
     response = api_request.post(APIConstants.RESET_PASSWORD_URL, data=json.dumps(data), headers=header)
-    if response.status_code == 400:
+    results = response.json()
+    if response.status_code == 200:
         messages.success(request, 'Password Changed successfully')
         del request.session['email']
         del request.session['token']

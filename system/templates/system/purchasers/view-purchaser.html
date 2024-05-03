@@ -28,11 +28,11 @@
                                 </thead>
                                 <tbody>
                                 <tr>
-                                    <td>{{ purchaser.name }}</td>>
-                                    <td>{{ purchaser.phone_number }}</td>>
-                                    <td>{{ purchaser.email }}</td>>
-                                    <td>{{ purchaser.digital_address }}</td>>
-                                    <td>{{ purchaser.residential_address }}</td>>
+                                    <td>{{ purchaser.name }}</td>
+                                    <td>{{ purchaser.phone_number }}</td>
+                                    <td>{{ purchaser.email }}</td>
+                                    <td>{{ purchaser.digital_address }}</td>
+                                    <td>{{ purchaser.residential_address }}</td>
                                 </tr>
                                 </tbody>
                             </table>
@@ -46,7 +46,7 @@
                                 <h4 class="card-title mb-2">Change Information</h4>
                             </div>
 
-                            <form action="{% url 'system:save_purchaser' %}" method="POST">
+                            <form id="edit-purchaser" action="{% url 'system:save_purchaser' %}" method="POST">
                                 {% csrf_token %}
                                 <div class="form-group">
                                     <label for="">Name</label>

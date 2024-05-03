@@ -71,7 +71,7 @@
                                                             <i class="zmdi zmdi-receipt"></i> View Sales
                                                         </a>
                                                         <a href="{% url 'system:view_referrer' referrer.id %}" class="btn-dark text-white btn-sm"><i class="fa fa-eye"></i></a>
-                                                        <a href="#" class="btn-info text-white btn-sm"><i class="fa fa-edit"></i></a>
+                                                        <a href="{% url 'system:view_referrer' referrer.id %}#edit-referrer" class="btn-info text-white btn-sm"><i class="fa fa-edit"></i></a>
                                                     </td>
                                                 </tr>
                                             {% empty %}

@@ -499,7 +499,7 @@ def edit_equipment(request, pk):
         'Authorization': f'Token {request.session.get("token")}',
         'Content-Type': 'application/json',
     }
-    response = api_request.get(f"{APIConstants.EQUIPMENTS_URL}/{pk}/", headers=header)
+    response = api_request.get(f"{APIConstants.EQUIPMENTS_URL}{pk}/", headers=header)
     user_response = api_request.get(APIConstants.ALL_USERS_URL, headers=header)
     technicians = [user for user in user_response.json() if user['role'] == "TECHNICIAN"]
     ctx = {
@@ -676,11 +676,11 @@ def view_inspection(request, pk):
         'Authorization': f'Token {request.session.get("token")}',
         'Content-Type': 'application/json'
     }
-    response = api_request.get(f"{APIConstants.ALL_INSPECTIONS_URL}/{pk}/", headers=header)
+    response = api_request.get(f"{APIConstants.ALL_INSPECTIONS_URL}{pk}/", headers=header)
     equipments_response = api_request.get(APIConstants.EQUIPMENTS_URL, headers=header)
     odometer_response = api_request.get(APIConstants.ALL_ODOMETERS, headers=header)
     users_response = api_request.get(APIConstants.ALL_USERS_URL, headers=header)
-
+    print(response.json())
     ctx = {
         'inspection': response.json(),
         "equipments": equipments_response.json(),

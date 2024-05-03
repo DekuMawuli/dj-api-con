@@ -1,10 +1,131 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends 'layouts/dashboard_base.html' %}
 
-</body>
-</html>
+{% block title %}
+    {{ purchaser.name }}
+{% endblock %}
+
+
+{% block content %}
+    <div class="main-content">
+        <div class="container-fluid">
+            <div class="row">
+                {% include 'layouts/partials/alerts.inc.html' %}
+                <div class="col-12 box-margin">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-content-center mb-2">
+                                <h4 class="card-title mb-2">Inspection Details</h4>
+                            </div>
+                            <table class="table table-striped table-bordered table-inverse table-responsive-sm">
+                                <thead class="thead-inverse">
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Current Location</th>
+                                    <th>Equipment</th>
+                                    <th>Technician</th>
+                                    <th>Odometer Value </th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <td>{{ inspection.name }}</td>
+                                    <td>{{ inspection.current_location }}</td>
+                                    <td>{{ inspection.equipment.name }}</td>
+                                    <td>{{ inspection.technician.first_name }} {{ inspection.technician.last_name }}</td>
+                                    <td>{{ inspection.odometer_value }}</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                            <div class="d-flex justify-content-between align-content-center my-2">
+                                <h4 class="card-title mb-2">Inspection Images</h4>
+                            </div>
+                            <table class="table table-striped table-bordered table-inverse table-responsive-sm">
+                                <thead class="thead-inverse">
+                                <tr>
+                                    {% for image in inspection.inspection_pics %}
+                                        <th>
+                                            Image {{ forloop.counter }}
+                                        </th>
+                                    {% empty %}
+                                    	<th>No Inspection Images added</th>
+                                    {% endfor %}
+
+                                </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        {% for image in inspection.inspection_pics %}
+                                            <td>
+                                                <img src="{{ image }}" alt="">
+                                            </td>
+                                        {% empty %}
+                                            <td><th>No Inspection Images added</th></td>
+                                        {% endfor %}
+                                    </tr>
+
+                                </tbody>
+                            </table>
+                        </div> <!-- end card body-->
+                    </div> <!-- end card -->
+                </div><!-- end col-->
+                <div class="col-12 box-margin">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-content-center mb-2">
+                                <h4 class="card-title mb-2">Change Information</h4>
+                            </div>
+
+                            <form id="edit-inspection" action="{% url 'system:save_inspection' %}" enctype="multipart/form-data" method="POST">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label for="">Name</label>
+                            <input type="text" class="form-control" value="{{ inspection.name }}" name="name" placeholder="Name of Inspection" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="">Current Location</label>
+                            <input type="text" class="form-control" value="{{ inspection.current_location }}" name="current_location" placeholder="Current Location" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="">Odometer Value</label>
+                            <input type="text" name="odometer_value" value="{{ inspection.odometer_value }}" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label for="">Equipment</label>
+                            <select class="form-control" name="equipment_pk" id="">
+                                <option value="" selected>-- Select Equipment --</option>
+                                {% for equipment in equipments %}
+                                    <option value="{{ equipment.id }}" {% if inspection.equipment.id == equipment.id %}selected {% endif %}>{{ equipment.name }}</option>
+                                {% endfor %}
+
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="">Notes</label>
+                            <textarea class="form-control" name="notes" id="" rows="3">{{ inspection.notes }}</textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for=""></label>
+                            <input type="file" class="form-control-file" name="inspection_pics" id="" multiple>
+                        </div>
+                        <div class="form-group">
+                            <label for="">Technician</label>
+                            <select class="form-control" name="technician_pk" id="">
+                                <option value="" selected>-- Select Technician --</option>
+                                {% for user in users %}
+                                    <option value="{{ user.id }}" {% if inspection.technician.id == user.id %}selected {% endif %}>{{ user.first_name }} {{ user.last_name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="form-group text-center">
+                            <button type="submit" class="btn btn-info">Update Inspection</button>
+                        </div>
+                    </form>
+                        </div> <!-- end card body-->
+                    </div> <!-- end card -->
+                </div>
+                <!-- end col-->
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
