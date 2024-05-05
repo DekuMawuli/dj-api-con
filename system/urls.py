@@ -9,14 +9,17 @@ urlpatterns = [
 
     path('odometers', views.all_odometers, name='all_odometers'),
     path('add-odometer', views.save_odometer, name='save_odometer'),
+    path('view-odometer/<int:pk>/update', views.update_odometer, name='update_odometer'),
     path('view-odometer/<int:pk>/', views.view_odometer, name='view_odometer'),
 
     path('purchasers', views.all_purchasers, name='all_purchasers'),
     path('add-purchaser', views.save_purchaser, name='save_purchaser'),
+    path('view-purchaser/<int:pk>/update', views.update_purchaser, name='update_purchaser'),
     path('view-purchaser/<int:pk>/', views.view_purchaser, name='view_purchaser'),
 
     path('referrers', views.all_referrers, name='all_referrers'),
     path('add-referrer', views.save_referrer, name='save_referrer'),
+    path('view-referrer/<int:pk>/update', views.update_referrer, name='update_referrer'),
     path('view-referrer/<int:pk>/', views.view_referrer, name='view_referrer'),
 
     path('users', views.all_users, name='all_users'),
@@ -41,6 +44,7 @@ urlpatterns = [
 
     path('service', views.all_services, name='all_services'),
     path('add-service', views.save_service, name='save_service'),
+    path('view-service/<int:pk>/update', views.update_service, name='update_service'),
     path('view-service/<int:pk>/', views.view_service, name='view_service'),
 
     path('inspections', views.all_inspections, name='all_inspections'),
@@ -49,6 +53,7 @@ urlpatterns = [
 
     path('sales', views.all_sales, name='all_sales'),
     path('add-sale', views.save_sale, name='save_sale'),
+    path('view-sale/<int:pk>/update', views.update_sale, name='update_sale'),
     path('view-sale/<int:pk>/', views.view_sale, name='view_sale'),
 
     path('purchaser/<int:pk>/sales/', views.purchaser_sales, name='purchaser_sales'),

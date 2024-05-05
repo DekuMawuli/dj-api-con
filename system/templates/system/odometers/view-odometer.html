@@ -44,7 +44,7 @@
                                 <h4 class="card-title mb-2">Change Information</h4>
                             </div>
 
-                            <form id="edit-odometer" action="{% url 'system:save_odometer' %}" method="POST">
+                            <form id="edit-odometer" action="{% url 'system:update_odometer' odometer.id %}" method="POST">
                                 {% csrf_token %}
                                 <div class="form-group">
                                     <label for="">Name</label>

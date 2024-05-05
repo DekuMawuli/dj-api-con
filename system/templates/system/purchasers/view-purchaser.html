@@ -46,7 +46,7 @@
                                 <h4 class="card-title mb-2">Change Information</h4>
                             </div>
 
-                            <form id="edit-purchaser" action="{% url 'system:save_purchaser' %}" method="POST">
+                            <form id="edit-purchaser" action="{% url 'system:update_purchaser' purchaser.id %}" method="POST">
                                 {% csrf_token %}
                                 <div class="form-group">
                                     <label for="">Name</label>

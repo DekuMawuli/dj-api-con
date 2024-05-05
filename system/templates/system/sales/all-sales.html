@@ -40,6 +40,18 @@
                                                 </th>
                                                 <th class="sorting" tabindex="0" aria-controls="datatable-buttons"
                                                     rowspan="1" colspan="1"
+                                                    aria-label="Position: activate to sort column ascending">Equipment
+                                                </th>
+                                                <th class="sorting" tabindex="0" aria-controls="datatable-buttons"
+                                                    rowspan="1" colspan="1"
+                                                    aria-label="Position: activate to sort column ascending">Purchaser
+                                                </th>
+                                                <th class="sorting" tabindex="0" aria-controls="datatable-buttons"
+                                                    rowspan="1" colspan="1"
+                                                    aria-label="Position: activate to sort column ascending">Referrer
+                                                </th>
+                                                <th class="sorting" tabindex="0" aria-controls="datatable-buttons"
+                                                    rowspan="1" colspan="1"
                                                     aria-label="Office: activate to sort column ascending">Plan Type
                                                 </th>
                                                 <th class="sorting" tabindex="0" aria-controls="datatable-buttons"
@@ -56,13 +68,16 @@
                                             <tbody>
                                                 {% for sale in sales %}
                                                 	<tr role="row" class="odd">
-                                                        <td tabindex="0" class="sorting_1"></td>
-                                                        <td style="">Accountant</td>
-                                                        <td style="">Tokyo</td>
-                                                        <td style="">Tokyo</td>
+                                                        <td tabindex="0" class="sorting_1">{{ sale.name }}</td>
+                                                        <td style="">{{ sale.amount }}</td>
+                                                        <td style="">{{ sale.equipment.name }}</td>
+                                                        <td style="">{{ sale.referrer.name }}</td>
+                                                        <td style="">{{ sale.purchaser.name }}</td>
+                                                        <td style="">{{ sale.plan_type }}</td>
+                                                        <td style="">{{ sale.duration }}</td>
                                                         <td>
                                                             <a href="{% url 'system:view_sale' sale.id %}" class="btn-dark text-white btn-sm"><i class="fa fa-eye"></i></a>
-                                                            <a href="#" class="btn-info text-white btn-sm"><i class="fa fa-edit"></i></a>
+                                                            <a href="{% url 'system:view_sale' sale.id %}#edit-sale" class="btn-info text-white btn-sm"><i class="fa fa-edit"></i></a>
                                                         </td>
                                                     </tr>
                                                 {% empty %}
@@ -114,8 +129,7 @@
                         <div class="form-group">
                             <label for="">Plan Type</label>
                             <select class="form-control" name="plan_type" id="">
-                                <option value="" selected>-- Select Purchaser --</option>
-                                <option value="HOURLY">HOURLY</option>
+                                <option value="" selected>-- Select Plan Type --</option>
                                 <option value="DAILY">DAILY</option>
                                 <option value="WEEKLY">WEEKLY</option>
                                 <option value="MONTHLY">MONTHLY</option>
@@ -123,7 +137,7 @@
                         </div>
                         <div class="form-group">
                             <label for="">Purchaser</label>
-                            <select class="form-control" name="purchaser" id="">
+                            <select class="form-control" name="purchaser_pk" id="">
                                 <option value="" selected>-- Select Purchaser --</option>
                                 {% for purchaser in purchasers %}
                                 	<option value="{{ purchaser.id }}">{{ purchaser.name }}</option>
@@ -133,13 +147,16 @@
                         </div>
                         <div class="form-group">
                             <label for="">Equipment</label>
-                            <select class="form-control" name="equipment" id="">
+                            <select class="form-control" name="equipment_pk" id="">
                                 <option value="" selected>-- Select Equipment --</option>
+                                {% for equipment in equipments %}
+                                	<option value="{{ equipment.id }}">{{ equipment.name }}</option>
+                                {% endfor %}
                             </select>
                         </div>
                         <div class="form-group">
                             <label for="">Referrer</label>
-                            <select class="form-control" name="referrer" id="">
+                            <select class="form-control" name="referrer_pk" id="">
                                 <option value="0" selected>-- Select Referrer --</option>
                                 {% for referrer in referrers %}
                                 	<option value="{{ referrer.id }}">{{ referrer.name }}</option>

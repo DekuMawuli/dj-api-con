@@ -1,10 +1,117 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends 'layouts/dashboard_base.html' %}
 
-</body>
-</html>
+{% block title %}
+    {{ sale.name }}
+{% endblock %}
+
+
+{% block content %}
+    <div class="main-content">
+        <div class="container-fluid">
+            <div class="row">
+                {% include 'layouts/partials/alerts.inc.html' %}
+                <div class="col-12 box-margin">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-content-center mb-2">
+                                <h4 class="card-title mb-2">Sale Details</h4>
+
+                            </div>
+                            <table class="table table-striped table-bordered table-inverse table-responsive-sm">
+                                <thead class="thead-inverse">
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Amount</th>
+                                    <th>Duration</th>
+                                    <th>Plan Type</th>
+                                    <th>Purchaser</th>
+                                    <th>Referrer</th>
+                                    <th>Equipment</th>
+
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <td scope="row">{{ sale.name }}</td>
+                                    <td scope="row">{{ sale.amount }}</td>
+                                    <td>{{ sale.duration }}</td>
+                                    <td>{{ sale.plan_type }}</td>
+                                    <td>{{ sale.purchaser.name }}</td>
+                                    <td>{{ sale.referrer.name }}</td>
+                                    <td>{{ sale.equipment.name }}</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div> <!-- end card body-->
+                    </div> <!-- end card -->
+                </div><!-- end col-->
+                <div class="col-12 box-margin">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-content-center mb-2">
+                                <h4 class="card-title mb-2">Change Information</h4>
+                            </div>
+
+                            <form id="edit-sale" action="{% url 'system:update_sale' sale.id %}" method="POST">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label for="">Name</label>
+                            <input type="text" class="form-control" value="{{ sale.name }}" name="name" placeholder="Name of Sale" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="">Amount</label>
+                            <input type="number" step="0.001" value="{{ sale.amount }}"  class="form-control" name="amount" placeholder="Amount" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="">Duration</label>
+                            <input type="text" class="form-control" value="{{ sale.duration }}" name="duration" placeholder="Name of Sale" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="">Plan Type</label>
+                            <select class="form-control" name="plan_type" id="">
+                                <option value="DAILY" {% if sale.plan_type == "DAILY" %} selected {% endif %}>DAILY</option>
+                                <option value="WEEKLY" {% if sale.plan_type == "WEEKLY" %} selected {% endif %}>WEEKLY</option>
+                                <option value="MONTHLY" {% if sale.plan_type == "MONTHLY" %} selected {% endif %}>MONTHLY</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="">Purchaser</label>
+                            <select class="form-control" name="purchaser_pk" id="">
+                                <option value="" selected>-- Select Purchaser --</option>
+                                {% for purchaser in purchasers %}
+                                	<option value="{{ purchaser.id }}" {% if sale.purchaser.id == purchaser.id %} selected {% endif %}>
+                                        {{ purchaser.name }}</option>
+                                {% endfor %}
+
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="">Equipment</label>
+                            <select class="form-control" name="equipment_pk" id="">
+                                {% for equipment in equipments %}
+                                	<option value="{{ equipment.id }}" {% if sale.equipment.id == equipment.id %} selected {% endif %}>
+                                        {{ equipment.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="">Referrer</label>
+                            <select class="form-control" name="referrer_pk" id="">
+                                {% for referrer in referrers %}
+                                	<option value="{{ referrer.id }}" {% if sale.referrer.id == referrer.id %} selected {% endif %}>
+                                        {{ referrer.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="form-group text-center">
+                            <button type="submit" class="btn btn-info">Update Sale</button>
+                        </div>
+                    </form>
+                        </div> <!-- end card body-->
+                    </div> <!-- end card -->
+                </div><!-- end col-->
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

@@ -46,7 +46,7 @@
                                 <h4 class="card-title mb-2">Change Information</h4>
                             </div>
 
-                            <form id="edit-referrer" action="{% url 'system:save_referrer' %}" method="POST">
+                            <form id="edit-referrer" action="{% url 'system:update_referrer' referrer.id %}" method="POST">
                                 {% csrf_token %}
                                 <div class="form-group">
                                     <label for="">Name</label>

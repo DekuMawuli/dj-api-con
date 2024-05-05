@@ -59,32 +59,43 @@ def view_odometer(request, pk):
     return render(request, "system/odometers/view-odometer.html", ctx)
 
 
-@user_verified
-@user_authenticated
-def edit_odometer(request, pk):
-    headers = {
-        'Authorization': f'Token {request.session.get("token")}',
-        'Content-Type': 'application/json'
-    }
-    response = api_request.get(f"{APIConstants.ALL_ODOMETERS}/{pk}/", headers=headers)
-    print(request.session.get("token"))
-    ctx = {
-        'odometer': response.json(),
-    }
-    return render(request, "system/odometers/edit-odometer.html", ctx)
+# @user_verified
+# @user_authenticated
+# def edit_odometer(request, pk):
+#     headers = {
+#         'Authorization': f'Token {request.session.get("token")}',
+#         'Content-Type': 'application/json'
+#     }
+#     response = api_request.get(f"{APIConstants.ALL_ODOMETERS}/{pk}/", headers=headers)
+#     print(request.session.get("token"))
+#     ctx = {
+#         'odometer': response.json(),
+#     }
+#     return render(request, "system/odometers/edit-odometer.html", ctx)
 
+
+@require_POST
 @user_verified
 @user_authenticated
 def update_odometer(request, pk):
-    headers = {
+    header = {
         'Authorization': f'Token {request.session.get("token")}',
         'Content-Type': 'application/json'
     }
-    response = api_request.get(f"{APIConstants.ALL_ODOMETERS}/{pk}/", headers=headers)
-    print(request.session.get("token"))
-    ctx = {
-        'odometer': response.json(),
+    name = request.POST.get("name")
+    value = request.POST.get("value")
+    equipment = request.POST.get("equipment")
+    data = {
+        "name": name,
+        "value": value,
+        "equipment": equipment,
     }
+
+    response = api_request.patch(f"{APIConstants.ALL_ODOMETERS}{pk}/", data=json.dumps(data), headers=header)
+    if response.ok:
+        messages.info(request, "Odometer updated successfully")
+    else:
+        messages.error(request, "Error occurred")
     return redirect("system:all_odometers")
 
 
@@ -358,10 +369,37 @@ def save_purchaser(request):
     }
     response = api_request.post(APIConstants.CREATE_PURCHASER_URL, headers=header, data=json.dumps(data))
     result = response.json()
-    print(result)
     if result["name"] is not None:
         messages.success(request, "Purchaser added Successfully")
     return redirect("system:all_purchasers")
+
+
+@require_POST
+@user_verified
+@user_authenticated
+def update_purchaser(request, pk):
+    header = {
+        'Authorization': f'Token {request.session.get("token")}',
+        'Content-Type': 'application/json'
+    }
+    name = request.POST.get("name")
+    phone_number = request.POST.get("phone_number")
+    email = request.POST.get("email")
+    digital_address = request.POST.get("digital_address")
+    residential_address = request.POST.get("residential_address")
+    data = {
+        "name": name,
+        "phone_number": phone_number,
+        "email": email,
+        "digital_address": digital_address,
+        "residential_address": residential_address,
+    }
+    response = api_request.patch(f"{APIConstants.ALL_PURCHASERS_URL}{pk}/", headers=header, data=json.dumps(data))
+    result = response.json()
+    if result["name"] is not None:
+        messages.info(request, "Purchaser updated Successfully")
+    return redirect("system:all_purchasers")
+
 
 
 @user_verified
@@ -440,6 +478,34 @@ def save_referrer(request):
         messages.success(request, "Referrer added Successfully")
     return redirect("system:all_referrers")
 
+
+
+@require_POST
+@user_verified
+@user_authenticated
+def update_referrer(request, pk):
+    header = {
+        'Authorization': f'Token {request.session.get("token")}',
+        'Content-Type': 'application/json'
+    }
+    email = request.POST.get("email")
+    name = request.POST.get("name")
+    phone_number = request.POST.get("phone_number")
+    digital_address = request.POST.get("digital_address")
+    residential_address = request.POST.get("residential_address")
+    data = {
+        "name": name,
+        "phone_number": phone_number,
+        "email": email,
+        "digital_address": digital_address,
+        "residential_address": residential_address,
+    }
+    response = api_request.patch(f"{APIConstants.CREATE_REFERRERS_URL}{pk}/", headers=header, data=json.dumps(data))
+    result = response.json()
+    print(result)
+    if result["name"] is not None:
+        messages.info(request, "Referrer added Successfully")
+    return redirect("system:all_referrers")
 
 @user_verified
 @user_authenticated
@@ -588,11 +654,13 @@ def all_sales(request):
     response = api_request.get(APIConstants.ALL_SALES_URL, headers=header)
     referrer_response = api_request.get(APIConstants.ALL_REFERRERS_URL, headers=header)
     purchaser_response = api_request.get(APIConstants.ALL_PURCHASERS_URL, headers=header)
+    equipments_response = api_request.get(APIConstants.EQUIPMENTS_URL, headers=header)
     sales = response.json()
     ctx = {
         'sales': sales,
         "referrers": referrer_response.json(),
-        "purchasers": purchaser_response.json()
+        "purchasers": purchaser_response.json(),
+        "equipments": equipments_response.json()
     }
     return render(request, "system/sales/all-sales.html", ctx)
 
@@ -607,13 +675,45 @@ def view_sale(request, pk):
     response = api_request.get(f"{APIConstants.API_BASE_URL}/sales/{pk}/", headers=header)
     referrer_response = api_request.get(APIConstants.ALL_REFERRERS_URL, headers=header)
     purchaser_response = api_request.get(APIConstants.ALL_PURCHASERS_URL, headers=header)
+    equipments_response = api_request.get(APIConstants.EQUIPMENTS_URL, headers=header)
     sale = response.json()
     ctx = {
         'sale': sale,
         "referrers": referrer_response.json(),
-        "purchasers": purchaser_response.json()
+        "purchasers": purchaser_response.json(),
+        "equipments": equipments_response.json()
     }
     return render(request, "system/sales/view-sale.html", ctx)
+
+
+@require_POST
+@user_verified
+@user_authenticated
+def update_sale(request, pk):
+    header = {
+        'Authorization': f'Token {request.session.get("token")}',
+        'Content-Type': 'application/json'
+    }
+    name = request.POST.get("name")
+    amount = request.POST.get("amount")
+    duration = request.POST.get("duration")
+    plan_type = request.POST.get("plan_type")
+    purchaser_pk = request.POST.get("purchaser_pk")
+    equipment_pk = request.POST.get("equipment_pk")
+    referrer_pk = request.POST.get("referrer_pk")
+    data = {
+        "name": name,
+        "amount": amount,
+        "duration": duration,
+        "plan_type": plan_type,
+        "purchaser_pk": purchaser_pk,
+        "equipment_pk": equipment_pk,
+        "referrer_pk": referrer_pk,
+    }
+    response = api_request.patch(f"{APIConstants.CREATE_SALES_URL}{pk}/", headers=header, data=json.dumps(data))
+    if response.ok:
+        messages.info(request, "Sales updated Successfully")
+    return redirect("system:all_sales")
 
 
 @require_POST
@@ -641,9 +741,7 @@ def save_sale(request):
         "referrer_pk": referrer_pk,
     }
     response = api_request.post(APIConstants.CREATE_SALES_URL, headers=header, data=json.dumps(data))
-    result = response.json()
-    print(result)
-    if result["name"] is not None:
+    if response.ok:
         messages.success(request, "Sales added Successfully")
     return redirect("system:all_sales")
 
@@ -740,11 +838,15 @@ def all_services(request):
     equipments_response = api_request.get(APIConstants.EQUIPMENTS_URL, headers=header)
     odometer_response = api_request.get(APIConstants.ALL_ODOMETERS, headers=header)
     service_type_response = api_request.get(APIConstants.ALL_SERVICE_TYPES, headers=header)
+    user_response = api_request.get(APIConstants.ALL_USERS_URL, headers=header)
+    users = user_response.json()
+    technicians = [user for user in users if user['role'] == "TECHNICIAN"]
     ctx = {
         'services': response.json(),
         "equipments": equipments_response.json(),
         "odometers": odometer_response.json(),
         "service_types": service_type_response.json(),
+        'technicians': technicians
     }
     return render(request, "system/services/all-services.html", ctx)
 
@@ -756,15 +858,19 @@ def view_service(request, pk):
         'Authorization': f'Token {request.session.get("token")}',
         'Content-Type': 'application/json'
     }
-    response = api_request.get(f"{APIConstants.ALL_SERVICES_URL}/{pk}/", headers=header)
+    response = api_request.get(f"{APIConstants.ALL_SERVICES_URL}{pk}/", headers=header)
     equipments_response = api_request.get(APIConstants.EQUIPMENTS_URL, headers=header)
     odometer_response = api_request.get(APIConstants.ALL_ODOMETERS, headers=header)
     service_type_response = api_request.get(APIConstants.ALL_SERVICE_TYPES, headers=header)
+    user_response = api_request.get(APIConstants.ALL_USERS_URL, headers=header)
+    users = user_response.json()
+    technicians = [user for user in users if user['role'] == "TECHNICIAN"]
     ctx = {
         'service': response.json(),
         "equipments": equipments_response.json(),
         "odometers": odometer_response.json(),
         "service_types": service_type_response.json(),
+        "technicians": technicians
     }
     return render(request, "system/services/view-service.html", ctx)
 
@@ -790,9 +896,38 @@ def save_service(request):
       "service_type_pk": service_type_pk,
       "technician_pk": technician_pk
     }
-    response = api_request.post(APIConstants.CREATE_INSPECTIONS_URL, headers=header, data=json.dumps(data))
+    response = api_request.post(APIConstants.CREATE_SERVICES_URL, headers=header, data=json.dumps(data))
     result = response.json()
     print(result)
-    if result["name"] is not None:
+    if response.ok:
         messages.success(request, "Sales added Successfully")
-    return redirect("all-inspections")
+    return redirect("system:all_services")
+
+
+@require_POST
+@user_verified
+@user_authenticated
+def update_service(request, pk):
+    header = {
+        'Authorization': f'Token {request.session.get("token")}',
+        'Content-Type': 'application/json'
+    }
+    odometer_value = request.POST.get('odometer_value')
+    notes = request.POST.get('notes')
+    service_type_pk = request.POST.get('service_type_pk')
+    equipment_pk = request.POST.get('equipment_pk')
+    technician_pk = request.POST.get('technician_pk')
+
+    data = {
+      "equipment_pk": equipment_pk,
+      "odometer_value": odometer_value,
+      "notes": notes,
+      "service_type_pk": service_type_pk,
+      "technician_pk": technician_pk
+    }
+    response = api_request.patch(f"{APIConstants.ALL_SERVICES_URL}{pk}/", headers=header, data=json.dumps(data))
+    result = response.json()
+    print(result)
+    if response.ok:
+        messages.info(request, "Service updated Successfully")
+    return redirect("system:all_services")

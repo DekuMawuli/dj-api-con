@@ -36,7 +36,7 @@
                                                 </th>
                                                 <th class="sorting" tabindex="0" aria-controls="datatable-buttons"
                                                     rowspan="1" colspan="1"
-                                                    aria-label="Position: activate to sort column ascending">Value
+                                                    aria-label="Position: activate to sort column ascending">Odometer Value
                                                 </th>
                                                 <th class="sorting" tabindex="0" aria-controls="datatable-buttons"
                                                     rowspan="1" colspan="1"
@@ -52,12 +52,12 @@
                                             <tbody>
                                                 {% for service in services %}
                                                 	<tr role="row" class="odd">
-                                                        <td tabindex="0" class="sorting_1">{{ service.name }}</td>
-                                                        <td style="">{{ service.value }}</td>
-                                                        <td style="">{{ service.equipment }}</td>
+                                                        <td tabindex="0" class="sorting_1">{{ service.service_type.name }}</td>
+                                                        <td style="">{{ service.odometer_value }}</td>
+                                                        <td style="">{{ service.equipment.name }}</td>
                                                         <td>
                                                             <a href="{% url 'system:view_service' service.id %}" class="btn-dark text-white btn-sm"><i class="fa fa-eye"></i></a>
-                                                            <a href="#" class="btn-info text-white btn-sm"><i class="fa fa-edit"></i></a>
+                                                            <a href="{% url 'system:view_service' service.id %}#edit-service" class="btn-info text-white btn-sm"><i class="fa fa-edit"></i></a>
                                                         </td>
                                                     </tr>
                                                 {% empty %}
@@ -92,7 +92,7 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <form action="{% url 'system:save_odometer' %}" method="POST">
+                    <form action="{% url 'system:save_service' %}" method="POST">
                         {% csrf_token %}
                         <div class="form-group">
                             <label for="">Service Type</label>
@@ -106,13 +106,7 @@
                         </div>
                         <div class="form-group">
                             <label for="">Odometer Value</label>
-                            <select class="form-control" name="odometer_value" id="">
-                                <option value="" selected>-- Select Odometer Value --</option>
-                                {% for odometer in odometers %}
-                                    <option value="{{ odometer.id }}">{{ odometer.name }}</option>
-                                {% endfor %}
-
-                            </select>
+                            <input type="number" step="0.001" class="form-control" name="odometer_value">
                         </div>
                         <div class="form-group">
                             <label for="">Equipment</label>
@@ -128,6 +122,9 @@
                             <label for="">Technician</label>
                             <select class="form-control" name="technician_pk" id="">
                                 <option value="" selected>-- Select Technician --</option>
+                                {% for technician in technicians %}
+                                    <option value="{{ technician.id }}">{{ technician.first_name }} {{ technician.last_name }}</option>
+                                {% endfor %}
 
                             </select>
                         </div>
