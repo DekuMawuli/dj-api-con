@@ -13,11 +13,19 @@
                 <div class="col-12 box-margin">
                     <div class="card">
                         <div class="card-body">
-                            <div class="d-flex justify-content-between align-content-center mb-2">
+                            <div class=" d-block d-md-flex justify-content-between align-content-center mb-2">
                                 <h4 class="card-title mb-2">{{ equipment.name }}</h4>
-                                <a href="{% url 'system:edit_equipment' equipment.id %}" class="btn btn-info btn-sm">
-                                    <i class="zmdi zmdi-plus"></i> Edit Equipment
-                                </a>
+                                <div>
+                                    <button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#edit-equipment">
+                                        <i class="zmdi zmdi-plus"></i> Edit Equipment
+                                    </button>
+                                    <a href="{% url 'system:edit_equipment' equipment.id %}" class="btn btn-dark mb-2 mb-md-0 btn-sm">
+                                        <i class="zmdi zmdi-plus"></i> Add Technician
+                                    </a>
+                                    <button type="button" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#add-odometer-reading">
+                                        <i class="zmdi zmdi-plus"></i> Add Odometer
+                                    </button>
+                                </div>
                             </div>
                             <div class="text-center mb-4">
                                 <img src="{{ equipment.image_url }}" alt="{{ equipment.name }}">
@@ -123,6 +131,135 @@
                         </div> <!-- end card body-->
                     </div> <!-- end card -->
                 </div><!-- end col-->
+            </div>
+        </div>
+    </div>
+
+    {# ============== EDIT EQUIPMENT #}
+    <div class="modal fade" id="edit-equipment" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Add new Equipment</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form action="{% url 'system:update_equipment' equipment.id %}" enctype="multipart/form-data" method="POST">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label for="">Name</label>
+                            <input type="hidden" name="old_image" value="{{ equipment.image_url }}">
+                            <input type="hidden" name="from_equipment" value="yes">
+                            <input type="text" class="form-control" value="{{ equipment.name }}" name="name" placeholder="Name of Equipment" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="">Model</label>
+                            <input type="text" class="form-control" value="{{ equipment.model }}"  name="model" placeholder="Model" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="">Engine Number</label>
+                            <input type="text" class="form-control" value="{{ equipment.engine_number }}"  name="engine_number" placeholder="Engine Number" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="">Year</label>
+                            <input type="text" class="form-control" value="{{ equipment.year }}"  name="year" placeholder="Year" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="">Image</label>
+                            <input type="file" class="form-control-file" name="image_url" >
+                        </div>
+
+                        <div class="form-group text-center">
+                            <button type="submit" class="btn btn-info">Edit Equipment</button>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    {# ================= ADD TECHNICIAN #}
+    <div class="modal fade" id="add-purchaser" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Add new Equipment</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form action="{% url 'system:save_equipment' %}" enctype="multipart/form-data" method="POST">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label for="">Name</label>
+                            <input type="text" class="form-control" name="name" placeholder="Name of Equipment" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="">Model</label>
+                            <input type="text" class="form-control" name="model" placeholder="Model" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="">Engine Number</label>
+                            <input type="text" class="form-control" name="engine_number" placeholder="Engine Number" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="">Year</label>
+                            <input type="text" class="form-control" name="year" placeholder="Year" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="">Image</label>
+                            <input type="file" class="form-control-file" name="image_url" >
+                        </div>
+                        <div class="form-group text-center">
+                            <button type="submit" class="btn btn-success">Save Equipment</button>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {# ================= ADD ODOMETER READING #}
+<div class="modal fade" id="add-odometer-reading" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Add new Odometer Reading</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form action="{% url 'system:save_odometer' %}" enctype="multipart/form-data" method="POST">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label for="">Name</label>
+                            <input type="hidden" value="{{ equipment.id }}" name="equipment">
+                            <input type="hidden" value="yes" name="from_equipment">
+                            <input type="text" class="form-control" name="name" placeholder="Name of Odometer" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="">Value</label>
+                            <input type="number" step="0.0001" class="form-control" name="value" placeholder="Value of Odometer" required>
+                        </div>
+                        <div class="form-group text-center">
+                            <button type="submit" class="btn btn-success">Save Reading</button>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
             </div>
         </div>
     </div>

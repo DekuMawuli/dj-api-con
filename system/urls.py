@@ -32,6 +32,7 @@ urlpatterns = [
 
     path('service-types', views.all_service_types, name='all_service_types'),
     path('add-service-type', views.save_service_type, name='save_service_type'),
+    path('view-service-type/<int:pk>/update', views.update_service_type, name='update_service_type'),
     path('view-service-type/<int:pk>/', views.view_service_type, name='view_service_type'),
 
     # ============== EQUIPMENTS URLS

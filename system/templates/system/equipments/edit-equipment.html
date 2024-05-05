@@ -39,17 +39,7 @@
                                     <label for="">Image</label>
                                     <input type="file" class="form-control-file" value="{{ equipment.name }}"  name="image_url" >
                                 </div>
-                                <div class="form-group">
-                                    <label for="">Technicians</label>
-                                    <select class="form-control" name="technicians" multiple>
-                                        {% for technician in technicians %}
-                                            <option value="{{ technician.id }}" {% if technician.id in equipment.technicians %}selected {% endif %}>
-                                                {{ technician.first_name }} {{ technician.last_name }}
-                                            </option>
-                                        {% endfor %}
 
-                                    </select>
-                                </div>
                                 <div class="form-group text-center">
                                     <button type="submit" class="btn btn-info">Update Equipment</button>
                                 </div>

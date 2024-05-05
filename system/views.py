@@ -31,9 +31,6 @@ def all_odometers(request):
     }
     response = api_request.get(APIConstants.ALL_ODOMETERS, headers=headers)
     equip_response = api_request.get(APIConstants.EQUIPMENTS_URL, headers=headers)
-    print(equip_response.json())
-    print(response.json())
-    print(request.session.get("token"))
     ctx = {
         'odometers': response.json(),
         'equipments': equip_response.json()
@@ -50,7 +47,7 @@ def view_odometer(request, pk):
     }
     response = api_request.get(f"{APIConstants.ALL_ODOMETERS}{pk}/", headers=headers)
     equip_response = api_request.get(APIConstants.EQUIPMENTS_URL, headers=headers)
-    single_equip = api_request.get(f"{APIConstants.EQUIPMENTS_URL}{pk}/", headers=headers)
+    single_equip = api_request.get(f"{APIConstants.EQUIPMENTS_URL}{response.json()['equipment']}", headers=headers)
     ctx = {
         'odometer': response.json(),
         'equipments': equip_response.json(),
@@ -67,7 +64,6 @@ def view_odometer(request, pk):
 #         'Content-Type': 'application/json'
 #     }
 #     response = api_request.get(f"{APIConstants.ALL_ODOMETERS}/{pk}/", headers=headers)
-#     print(request.session.get("token"))
 #     ctx = {
 #         'odometer': response.json(),
 #     }
@@ -110,6 +106,7 @@ def save_odometer(request):
     name = request.POST.get("name")
     value = request.POST.get("value")
     equipment = request.POST.get("equipment")
+    from_eq = request.POST.get("from_equipment")
     data = {
         "name": name,
         "value": value,
@@ -121,14 +118,14 @@ def save_odometer(request):
         messages.success(request, "New Odometer added successfully")
     else:
         messages.error(request, "Error occurred")
+    if from_eq is not None:
+        return redirect('system:view_equipment', equipment)
     return redirect("system:all_odometers")
-
 
 
 @user_verified
 @user_authenticated
 def all_users(request):
-    print(request.session.get('token'))
     header = {
         'Authorization': f'Token {request.session.get("token")}',
         'Content-Type': 'application/json'
@@ -161,14 +158,12 @@ def save_user(request):
         # "created": timezone.now(),"technician_equipment": []
     }
     response = api_request.post(APIConstants.CREATE_USER_URL, data=json.dumps(data), headers=header)
-    print(response.json(), "new user")
     return redirect("system:all_users")
 
 
 @user_verified
 @user_authenticated
 def all_technicians(request):
-    print(request.session.get('token'))
     header = {
         'Authorization': f'Token {request.session.get("token")}',
         'Content-Type': 'application/json'
@@ -259,7 +254,6 @@ def save_technician(request):
         # "created": timezone.now(),"technician_equipment": []
     }
     response = api_request.post(APIConstants.CREATE_USER_URL, data=json.dumps(data), headers=header)
-    print(response.json())
     return redirect("system:all_technicians")
 
 
@@ -313,6 +307,29 @@ def save_service_type(request):
     result = response.json()
     if result["name"] is not None:
         messages.success(request, "Service Type added Successfully")
+    return redirect("system:all_service_types")
+
+
+@require_POST
+@user_verified
+@user_authenticated
+def update_service_type(request, pk):
+    header = {
+        'Authorization': f'Token {request.session.get("token")}',
+        'Content-Type': 'application/json'
+    }
+    name = request.POST.get("name")
+    odometer_value = request.POST.get("odometer_value")
+    notes = request.POST.get("notes")
+    data = {
+        "name": name,
+        "odometer_value": odometer_value,
+        "notes": notes,
+    }
+    response = api_request.patch(f"{APIConstants.CREATE_SERVICE_TYPES}{pk}/", headers=header, data=json.dumps(data))
+    result = response.json()
+    if result["name"] is not None:
+        messages.info(request, "Service Type updated Successfully")
     return redirect("system:all_service_types")
 
 
@@ -413,7 +430,6 @@ def purchaser_sales(request, pk):
         f"{APIConstants.API_BASE_URL}/purchaser/{pk}/sales/",
         headers=header
     )
-    print(response.text)
     ctx = {
         'sales': response.json()
     }
@@ -429,7 +445,6 @@ def all_referrers(request):
         'Content-Type': 'application/json'
     }
     response = api_request.get(APIConstants.ALL_REFERRERS_URL, headers=header)
-    print(response.json())
     ctx = {
         'referrers': response.json()
     }
@@ -473,7 +488,6 @@ def save_referrer(request):
     }
     response = api_request.post(APIConstants.CREATE_REFERRERS_URL, headers=header, data=json.dumps(data))
     result = response.json()
-    print(result)
     if result["name"] is not None:
         messages.success(request, "Referrer added Successfully")
     return redirect("system:all_referrers")
@@ -502,7 +516,6 @@ def update_referrer(request, pk):
     }
     response = api_request.patch(f"{APIConstants.CREATE_REFERRERS_URL}{pk}/", headers=header, data=json.dumps(data))
     result = response.json()
-    print(result)
     if result["name"] is not None:
         messages.info(request, "Referrer added Successfully")
     return redirect("system:all_referrers")
@@ -519,7 +532,7 @@ def referrer_sales(request, pk):
         f"{APIConstants.API_BASE_URL}/referrer/{pk}/sales/",
         headers=header
     )
-    print(response.json())
+
     ctx = {
         'sales': response.json()
     }
@@ -600,7 +613,6 @@ def save_equipment(request):
     response = api_request.post(
         APIConstants.CREATE_EQUIPMENTS_URL, headers=header, data=json.dumps(data))
     result = response.json()
-    print(result)
     if result["name"] is not None:
         messages.success(request, "Equipment added Successfully")
     return redirect("system:all_equipments")
@@ -620,7 +632,7 @@ def update_equipment(request, pk):
     year = request.POST.get("year")
     image_url = request.FILES.get("image_url")
     old_image = request.POST.get("old_image")
-    technicians = request.POST.getlist('technicians')
+    from_eq = request.POST.get("from_equipment")
     uploaded_image = None
     if image_url is not None:
         uploaded_image = cloudinary.uploader.upload(file=image_url)
@@ -631,15 +643,16 @@ def update_equipment(request, pk):
         "engine_number": engine_number,
         "year": year,
         "image_url": uploaded_image['url'] if uploaded_image is not None else old_image,
-        'technicians_id': technicians
+        "technicians_id": []
     }
 
     response = api_request.patch(
-        f"{APIConstants.API_BASE_URL}/equipments/{pk}/", headers=header, data=json.dumps(data))
+        f"{APIConstants.EQUIPMENTS_URL}{pk}/", headers=header, data=json.dumps(data))
     result = response.json()
-    print(response.json())
-    # if result["name"] is not None:
-    #     messages.success(request, "Equipment added Successfully")
+    if result["name"] is not None:
+        messages.info(request, "Equipment updated Successfully")
+    if from_eq is not None:
+        return redirect('system:view_equipment', pk)
     return redirect("system:all_equipments")
 
 
@@ -757,7 +770,6 @@ def all_inspections(request):
     equipments_response = api_request.get(APIConstants.EQUIPMENTS_URL, headers=header)
     odometer_response = api_request.get(APIConstants.ALL_ODOMETERS, headers=header)
     users_response = api_request.get(APIConstants.ALL_USERS_URL, headers=header)
-    print(response.json())
     ctx = {
         'inspections': response.json(),
         "equipments": equipments_response.json(),
@@ -778,7 +790,6 @@ def view_inspection(request, pk):
     equipments_response = api_request.get(APIConstants.EQUIPMENTS_URL, headers=header)
     odometer_response = api_request.get(APIConstants.ALL_ODOMETERS, headers=header)
     users_response = api_request.get(APIConstants.ALL_USERS_URL, headers=header)
-    print(response.json())
     ctx = {
         'inspection': response.json(),
         "equipments": equipments_response.json(),
@@ -807,7 +818,6 @@ def save_inspection(request):
 
         uploaded_images_urls = []
         for pic in inspection_pics:
-            print(pic)
             uploaded_image = cloudinary.uploader.upload(file=pic)
             uploaded_images_urls.append(uploaded_image['url'])
         data = {
@@ -821,7 +831,6 @@ def save_inspection(request):
         }
         response = api_request.post(APIConstants.CREATE_INSPECTIONS_URL, headers=header, data=json.dumps(data))
         result = response.json()
-        print(result)
         if result["name"] is not None:
             messages.success(request, "Sales added Successfully")
     return redirect("system:all_inspections")
@@ -898,7 +907,6 @@ def save_service(request):
     }
     response = api_request.post(APIConstants.CREATE_SERVICES_URL, headers=header, data=json.dumps(data))
     result = response.json()
-    print(result)
     if response.ok:
         messages.success(request, "Sales added Successfully")
     return redirect("system:all_services")
@@ -926,8 +934,6 @@ def update_service(request, pk):
       "technician_pk": technician_pk
     }
     response = api_request.patch(f"{APIConstants.ALL_SERVICES_URL}{pk}/", headers=header, data=json.dumps(data))
-    result = response.json()
-    print(result)
     if response.ok:
         messages.info(request, "Service updated Successfully")
     return redirect("system:all_services")

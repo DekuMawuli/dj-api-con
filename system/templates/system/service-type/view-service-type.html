@@ -1,10 +1,72 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends 'layouts/dashboard_base.html' %}
 
-</body>
-</html>
+{% block title %}
+    {{ service_type.name }}
+{% endblock %}
+
+
+{% block content %}
+    <div class="main-content">
+        <div class="container-fluid">
+            <div class="row">
+                {% include 'layouts/partials/alerts.inc.html' %}
+                <div class="col-12 box-margin">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-content-center mb-2">
+                                <h4 class="card-title mb-2">Service Type Details</h4>
+
+                            </div>
+                            <table class="table table-striped table-bordered table-inverse table-responsive-sm">
+                                <thead class="thead-inverse">
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Odometer Value</th>
+                                    <th>Notes</th>
+
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <td scope="row">{{ service_type.name }}</td>
+                                    <td scope="row">{{ service_type.odometer_value }}</td>
+                                    <td>{{ service_type.notes }}</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div> <!-- end card body-->
+                    </div> <!-- end card -->
+                </div><!-- end col-->
+                <div class="col-12 box-margin">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-content-center mb-2">
+                                <h4 class="card-title mb-2">Change Information</h4>
+                            </div>
+                             <form action="{% url 'system:update_service_type' service_type.id %}" method="POST">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label for="">Name</label>
+                            <input type="text" class="form-control" name="name" value="{{ service_type.name }}" placeholder="Name of Service Type" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="">Odometer Value</label>
+                            <input type="number" step="0.0001" class="form-control" value="{{ service_type.odometer_value }}" name="odometer_value" placeholder="Odometer Value" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="">Notes</label>
+                            <textarea class="form-control" name="notes" id="" rows="3">{{ service_type.notes }}</textarea>
+                        </div>
+                        <div class="form-group text-center">
+                            <button type="submit" class="btn btn-info">Update Service Type</button>
+                        </div>
+                    </form>
+
+                        </div> <!-- end card body-->
+                    </div> <!-- end card -->
+                </div><!-- end col-->
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
